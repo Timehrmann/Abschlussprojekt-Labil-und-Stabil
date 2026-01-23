@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Interactive 3D particle simulation with multiple shapes and post-processing effects">
+    <title>3D Particle Simulation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="canvas-container"></div>
+    <div class="custom-cursor" id="custom-cursor"></div>
+
+    <div class="help-overlay">
+        <p><strong>Click</strong> — Change shape</p>
+        <p><strong>I</strong> — Invert colors</p>
+        <p><strong>M</strong> — Mute / Unmute</p>
+        <p><strong>F</strong> — Freeze / Unfreeze</p>
+    </div>
+
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+        }
+    }
+    </script>
+    <script type="module" src="particles.js"></script>
+</body>
+
+</html>
