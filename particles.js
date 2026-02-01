@@ -491,6 +491,78 @@ class ParticleSimulation {
     // ============================================
 
     setupEventListeners() {
+        // ============================
+        // UI Controls (Mobile/Desktop)
+        // ============================
+
+        const btnShape = document.getElementById('btn-shape');
+        const btnInvert = document.getElementById('btn-invert');
+        const btnMute = document.getElementById('btn-mute');
+        const btnFreeze = document.getElementById('btn-freeze');
+
+        if (btnShape) {
+            btnShape.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation(); // Prevent canvas click
+                this.toggleShape();
+            });
+            // Stop propagation on mousedown so it doesn't trigger canvas interaction
+            btnShape.addEventListener('mousedown', (e) => e.stopPropagation());
+            btnShape.addEventListener('touchstart', (e) => e.stopPropagation());
+        }
+
+        if (btnInvert) {
+            btnInvert.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                this.toggleInvert();
+            });
+            btnInvert.addEventListener('mousedown', (e) => e.stopPropagation());
+            btnInvert.addEventListener('touchstart', (e) => e.stopPropagation());
+        }
+
+        if (btnMute) {
+            btnMute.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+
+                // Initialize audio context on first user gesture if needed
+                if (!this.soundManager.isInitialized) {
+                    this.soundManager.init();
+                }
+
+                const isMuted = this.soundManager.toggleMute();
+                if (isMuted) {
+                    btnMute.classList.add('muted');
+                } else {
+                    btnMute.classList.remove('muted');
+                }
+            });
+            btnMute.addEventListener('mousedown', (e) => e.stopPropagation());
+            btnMute.addEventListener('touchstart', (e) => e.stopPropagation());
+        }
+
+        if (btnFreeze) {
+            btnFreeze.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                this.isFrozen = !this.isFrozen;
+                console.log(this.isFrozen ? 'Time frozen' : 'Time unfrozen');
+
+                if (this.isFrozen) {
+                    btnFreeze.classList.add('active');
+                } else {
+                    btnFreeze.classList.remove('active');
+                }
+            });
+            btnFreeze.addEventListener('mousedown', (e) => e.stopPropagation());
+            btnFreeze.addEventListener('touchstart', (e) => e.stopPropagation());
+        }
+
+        // ============================
+        // Existing Window Events
+        // ============================
+
         // Mouse move
         window.addEventListener('mousemove', (e) => {
             this.mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
@@ -509,7 +581,11 @@ class ParticleSimulation {
         });
 
         // Mouse down/up - Click to change shape
-        window.addEventListener('mousedown', () => {
+        // ONLY trigger if not clicking on UI controls (handled by propagation stop above)
+        window.addEventListener('mousedown', (e) => {
+            // Check if target is a button
+            if (e.target.closest('button')) return;
+
             if (!this.hasInteracted) {
                 this.soundManager.init();
                 this.hasInteracted = true;
@@ -517,8 +593,11 @@ class ParticleSimulation {
 
             this.isMouseDown = true;
             if (this.customCursor) this.customCursor.classList.add('active');
+
+            // Only change shape on Main Canvas Click, not UI click
             this.toggleShape();
         });
+
         window.addEventListener('mouseup', () => {
             this.isMouseDown = false;
             if (this.customCursor) this.customCursor.classList.remove('active');
@@ -526,7 +605,12 @@ class ParticleSimulation {
 
         // Touch support
         window.addEventListener('touchmove', (e) => {
-            e.preventDefault();
+            // Prevent default only if not touching UI (though UI is fixed, so maybe okay)
+            // But we want to prevent scrolling
+            if (!e.target.closest('button')) {
+                e.preventDefault();
+            }
+
             const touch = e.touches[0];
             this.mouse.x = (touch.clientX / window.innerWidth) * 2 - 1;
             this.mouse.y = -(touch.clientY / window.innerHeight) * 2 + 1;
@@ -538,6 +622,8 @@ class ParticleSimulation {
         }, { passive: false });
 
         window.addEventListener('touchstart', (e) => {
+            if (e.target.closest('button')) return;
+
             this.isMouseDown = true;
             const touch = e.touches[0];
             this.mouse.x = (touch.clientX / window.innerWidth) * 2 - 1;
@@ -555,16 +641,22 @@ class ParticleSimulation {
             if (e.code === 'KeyF') {
                 e.preventDefault();
                 this.isFrozen = !this.isFrozen;
+                if (this.isFrozen) btnFreeze?.classList.add('active');
+                else btnFreeze?.classList.remove('active');
                 console.log(this.isFrozen ? 'Time frozen' : 'Time unfrozen');
             }
             if (e.code === 'KeyI') {
                 e.preventDefault();
                 this.toggleInvert();
+                // Button state is handled in toggleInvert or could be here, but simpler to rely on global state sync if possible. 
+                // Since there's no visual "active" state for invert button (it just matches theme), we rely on CSS body class.
             }
             if (e.code === 'KeyM') {
                 e.preventDefault();
                 if (this.soundManager) {
-                    this.soundManager.toggleMute();
+                    const isMuted = this.soundManager.toggleMute();
+                    if (isMuted) btnMute?.classList.add('muted');
+                    else btnMute?.classList.remove('muted');
                 }
             }
         });
