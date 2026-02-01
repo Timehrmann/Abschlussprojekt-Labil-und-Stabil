@@ -24,6 +24,33 @@
         <p><strong>F</strong> — Freeze / Unfreeze</p>
     </div>
 
+    <!-- Mobile/Desktop On-Screen Controls -->
+    <div class="controls-overlay">
+        <button id="btn-shape" aria-label="Change Shape" title="Change Shape">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2L2 22h20L12 2z" />
+            </svg>
+        </button>
+        <button id="btn-invert" aria-label="Invert Colors" title="Invert Colors">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 2a10 10 0 0 1 0 20z" fill="currentColor" />
+            </svg>
+        </button>
+        <button id="btn-mute" aria-label="Mute Audio" title="Mute Audio">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M11 5L6 9H2v6h4l5 4V5z" />
+                <path d="M19.07 4.93L4.93 19.07" class="mute-stripe" style="opacity: 0" />
+            </svg>
+        </button>
+        <button id="btn-freeze" aria-label="Freeze Time" title="Freeze Time">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="6" y="4" width="4" height="16" />
+                <rect x="14" y="4" width="4" height="16" />
+            </svg>
+        </button>
+    </div>
+
     <script type="importmap">
     {
         "imports": {
