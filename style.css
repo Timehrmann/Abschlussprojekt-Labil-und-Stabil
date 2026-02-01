@@ -237,8 +237,9 @@ body.inverted button.active {
    Mobile / Responsive Tweaks
    ============================================ */
 
-/* Hide Custom Cursor on Touch Devices */
-@media (hover: none) and (pointer: coarse) {
+/* Hide Custom Cursor on Touch Devices OR Small Screens */
+@media (hover: none) and (pointer: coarse),
+(max-width: 768px) {
     .custom-cursor {
         display: none !important;
     }
