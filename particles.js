@@ -183,9 +183,6 @@ class ParticleSimulation {
             rotationSpeed: 0.003,
             noiseAmount: 0.1,
             shape: 'sphere',
-            bloomStrength: 1.5,
-            bloomRadius: 0.8,
-            bloomThreshold: 0.1,
             windStrength: 0.09,
             windTurbulence: 0.2,
             damping: 0.96,
@@ -205,10 +202,7 @@ class ParticleSimulation {
         // Shape transformation state
         this.currentShape = 'sphere';
         this.shapeOrder = ['sphere', 'cube', 'pyramid'];
-        this.chaosLevel = 0;
-        this.transformThreshold = 5000;
         this.isTransforming = false;
-        this.cooldown = 0;
         this.shapes = {
             sphere: null,
             cube: null,
@@ -586,19 +580,7 @@ class ParticleSimulation {
         });
     }
 
-    resetParticles() {
-        const positions = this.geometry.attributes.position.array;
-        const originalPositions = this.geometry.attributes.originalPosition.array;
-        const velocities = this.geometry.attributes.velocity.array;
 
-        for (let i = 0; i < this.config.particleCount * 3; i++) {
-            positions[i] = originalPositions[i];
-            velocities[i] = 0;
-        }
-
-        this.geometry.attributes.position.needsUpdate = true;
-        this.geometry.attributes.velocity.needsUpdate = true;
-    }
 
     // ============================================
     // Simplex Noise
@@ -654,7 +636,7 @@ class ParticleSimulation {
         const windY = Math.sin(windAngle * 0.7) * windStrength * 0.5;
         const windZ = Math.sin(windAngle * 0.5) * windStrength * 0.3;
 
-        if (this.cooldown > 0) this.cooldown--;
+
 
         const mousePos = this.mouseWorld.clone();
         mousePos.applyMatrix4(this.particles.matrixWorld.clone().invert());
